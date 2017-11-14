@@ -26,6 +26,8 @@ class RSwiftSegmentedControl: UIView {
     open var selectedIndex: Int = 0
     open var spacing: CGFloat = 1
     open var buttonTextSpacing: CGFloat = 40
+    open var target: AnyObject?
+    open var action: Selector?
 
 
     //Private Properties
@@ -188,7 +190,18 @@ class RSwiftSegmentedControl: UIView {
         let selectedIndex = self.buttonsSet.index(of: sender)
         self.selectedIndex = selectedIndex
         self.checkAndScrollToFrameOf(button: sender)
+        if self.target != nil,
+            self.action != nil {
+            if self.target!.responds(to: self.action) {
+                let _ = self.target!.perform(self.action!, with: self, afterDelay: 0.0)
+            }
+        }
         self.setNeedsLayout()
+    }
+
+    open func addTarget(target: AnyObject!, action: Selector!) {
+        self.target = target
+        self.action = action
     }
 
 }
